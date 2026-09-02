@@ -11,8 +11,8 @@ function solution_2(input) {
   return "Hello World!";
 }
 
-console.log(`Day 2, Solution 1: ${solution_1(input)}`);
-console.log(`Day 2, Solution 2: ${solution_2(input)}`);
+console.log(`Placeholder, Solution 1: ${solution_1(input)}`);
+console.log(`Placeholder, Solution 2: ${solution_2(input)}`);
 
 module.exports = {
   solution_1,
