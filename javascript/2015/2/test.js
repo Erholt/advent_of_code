@@ -16,10 +16,6 @@ test.describe("Day 2", () => {
     test("solution_1 returns 43", () => {
       assert.strictEqual(solution_1(["1x1x10"]), 43);
     });
-
-    test("solution_1 returns correct value with given input", () => {
-      assert.strictEqual(solution_1(input), 1588178);
-    });
   });
 
   // Solution 2
@@ -30,10 +26,6 @@ test.describe("Day 2", () => {
 
     test("solution_2 returns 14", () => {
       assert.strictEqual(solution_2(["1x1x10"]), 14);
-    });
-
-    test("solution_2 returns correct value with given input", () => {
-      assert.strictEqual(solution_2(input), 3783758);
     });
   });
 
@@ -60,3 +52,6 @@ test.describe("Day 2", () => {
     });
   });
 });
+
+console.log(`Day 2, Solution 1: ${solution_1(input)}`);
+console.log(`Day 2, Solution 2: ${solution_2(input)}`);

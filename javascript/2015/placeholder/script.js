@@ -8,11 +8,8 @@ function solution_1(input) {
 }
 
 function solution_2(input) {
-  return "Hello World!";
+  return "World Hello!";
 }
-
-console.log(`Placeholder, Solution 1: ${solution_1(input)}`);
-console.log(`Placeholder, Solution 2: ${solution_2(input)}`);
 
 module.exports = {
   solution_1,
