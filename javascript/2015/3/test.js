@@ -29,14 +29,24 @@ test.describe("Day 3", () => {
   });
 
   // Solution 2
-  // test.describe("Solution 2", () => {
-  //   test ("solution_2 returns 'World Hello!'", () => {
-  //     assert.strictEqual(
-  //       solution_2("test"),
-  //       "World Hello!"
-  //     );
-  //   });
-  // });
+  test.describe("Solution 2", () => {
+    test ("solution_2 returns the correct", () => {
+      assert.strictEqual(
+        solution_2("^v"),
+        3
+      );
+
+      assert.strictEqual(
+        solution_2("^>v<"),
+        3
+      );
+
+      assert.strictEqual(
+        solution_2("^v^v^v^v^v"),
+        11
+      );
+    });
+  });
 
  // Coordinates Object
   test.describe("Coordinates", () => {
