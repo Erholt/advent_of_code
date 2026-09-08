@@ -21,5 +21,15 @@ jobs:
             npm install
           fi
 
-      - name: Run tests (parallel)
-        run: node --test --jobs=auto javascript
+      - name: Check Node version
+        run: node --version
+
+      - name: Run tests (parallel if supported)
+        run: |
+          if node --help 2>&1 | grep -q -- '--jobs'; then
+            echo "Node supports --jobs, running with parallel jobs"
+            node --test --jobs=auto javascript
+          else
+            echo "Node does not support --jobs, running without jobs"
+            node --test javascript
+          fi
