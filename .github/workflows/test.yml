@@ -1,0 +1,68 @@
+name: Selective Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      days: ${{ steps.detect.outputs.days }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed days
+        id: detect
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+          else
+            base_sha="${{ github.event.before }}"
+          fi
+          git fetch origin "$base_sha" --depth=1 || true
+          changed=$(git diff --name-only "$base_sha" ${{ github.sha }} || true)
+          echo "Changed files: $changed"
+          days=$(printf "%s\n" "$changed" | awk -F'/' '/^javascript\/[0-9]{4}\// {print $1"/"$2"/"$3}' | sort -u | python3 -c 'import sys,json; l=[s.strip() for s in sys.stdin if s.strip()]; print(json.dumps(l))')
+          if [ "$days" = "[]" ]; then
+            days='["all"]'
+          fi
+          echo "days=$days" >> $GITHUB_OUTPUT
+
+  test:
+    needs: detect
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        day: ${{ fromJson(needs.detect.outputs.days) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run tests for ${{ matrix.day }}
+        run: |
+          if [ "${{ matrix.day }}" = "all" ]; then
+            for d in javascript/*/*; do
+              if [ -f "$d/test.js" ]; then
+                echo "Running tests in $d"
+                node "$d/test.js"
+              fi
+            done
+          else
+            dir="${{ matrix.day }}"
+            if [ -f "$dir/test.js" ]; then
+              echo "Running tests in $dir"
+              node "$dir/test.js"
+            else
+              echo "No test file for $dir"
+            fi
+          fi
