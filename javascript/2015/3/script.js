@@ -4,32 +4,41 @@ const path = require("node:path");
 let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
 
 function solution_1(input) {
-  let position                     = coordinates();
-  let array_of_houses_with_present = [position.to_string()]
+  let santa                     = coordinates();
+  let array_of_houses_with_present = [santa.to_string()];
 
   for (let i = 0; i < input.length; i++) {
     switch (input[i]) {
-      case "^":
-        position.go_north();
-        break;
-      case "v":
-        position.go_south();
-        break;
-      case ">":
-        position.go_east();
-        break;
-      case "<":
-        position.go_west();
-        break;
+      case "^": santa.go_north(); break;
+      case "v": santa.go_south(); break;
+      case ">": santa.go_east(); break;
+      case "<": santa.go_west(); break;
     }
-    array_of_houses_with_present.push(position.to_string())
+    array_of_houses_with_present.push(santa.to_string());
   }
 
-  return [...new Set(array_of_houses_with_present)].length
+  return [...new Set(array_of_houses_with_present)].length;
 }
 
 function solution_2(input) {
-  return "World Hello!";
+  let santa                        = coordinates();
+  let robo_santa                   = coordinates();
+  let array_of_houses_with_present = [santa.to_string()];
+
+  for (let i = 0; i < input.length; i++) {
+    let mover = i % 2 == 0 ? santa : robo_santa;
+      
+    switch (input[i]) {
+      case "^": mover.go_north(); break;
+      case "v": mover.go_south(); break;
+      case ">": mover.go_east(); break;
+      case "<": mover.go_west(); break;
+    }
+    
+    array_of_houses_with_present.push(mover.to_string());
+  }
+
+  return [...new Set(array_of_houses_with_present)].length;
 }
 
 function coordinates() {
@@ -51,7 +60,6 @@ function coordinates() {
     go_west
   }
 }
-
 
 module.exports = {
   solution_1,
