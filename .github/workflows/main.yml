@@ -11,12 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Fetch repository
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git init
+        git remote add origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+        git fetch --no-tags --prune --depth=2 origin ${{ github.sha }} || true
+        git checkout --progress --force ${{ github.sha }} || true
 
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+    - name: Install Node 18 (apt)
+      run: |
+        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+        node -v
+        npm -v
 
     - name: Install dependencies
       run: npm ci
