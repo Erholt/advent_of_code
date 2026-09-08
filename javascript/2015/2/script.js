@@ -39,3 +39,6 @@ module.exports = {
   solution_2,
   gift
 };
+
+console.log(`Day 2, Solution 1: ${solution_1(input)}`);
+console.log(`Day 2, Solution 2: ${solution_2(input)}`);

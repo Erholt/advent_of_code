@@ -76,6 +76,3 @@ test.describe("Day 2", () => {
     });
   });
 });
-
-console.log(`Day 2, Solution 1: ${solution_1(input)}`);
-console.log(`Day 2, Solution 2: ${solution_2(input)}`);

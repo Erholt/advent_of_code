@@ -50,3 +50,6 @@ module.exports = {
   solution_2,
   coordinates
 };
+
+console.log(`Day 3, Solution 1: ${solution_1(input)}`);
+console.log(`Day 3, Solution 2: ${solution_2(input)}`);

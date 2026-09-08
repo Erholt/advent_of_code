@@ -15,3 +15,6 @@ module.exports = {
   solution_1,
   solution_2
 };
+
+console.log(`Placeholder, Solution 1: ${solution_1(input)}`);
+console.log(`Placeholder, Solution 2: ${solution_2(input)}`);
