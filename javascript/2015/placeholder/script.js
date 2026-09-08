@@ -5,11 +5,11 @@ let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").split("\n
 
 function solution_1(input) {
   return "Hello World!";
-}
+};
 
 function solution_2(input) {
   return "World Hello!";
-}
+};
 
 module.exports = {
   solution_1,
