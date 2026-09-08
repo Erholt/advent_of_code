@@ -1,83 +1,49 @@
-name: Selective Tests
-
+name: Test
 on:
-  push:
   pull_request:
-
-permissions:
-  contents: read
-
 jobs:
-  detect:
-    runs-on: ubuntu-latest
-    outputs:
-      days: ${{ steps.detect.outputs.days }}
-    steps:
-      - name: Fetch repository
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git init
-          git remote add origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-          git fetch --no-tags --prune --depth=2 origin ${{ github.sha }} || true
-          git checkout --progress --force ${{ github.sha }} || true
-
-      - name: Detect changed days
-        id: detect
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            base_sha="${{ github.event.pull_request.base.sha }}"
-          else
-            base_sha="${{ github.event.before }}"
-          fi
-          git fetch origin "$base_sha" --depth=1 || true
-          changed=$(git diff --name-only "$base_sha" ${{ github.sha }} || true)
-          echo "Changed files: $changed"
-          days=$(printf "%s\n" "$changed" | awk -F'/' '/^javascript\/[0-9]{4}\// {print $1"/"$2"/"$3}' | sort -u | python3 -c 'import sys,json; l=[s.strip() for s in sys.stdin if s.strip()]; print(json.dumps(l))')
-          if [ "$days" = "[]" ]; then
-            days='["all"]'
-          fi
-          echo "days=$days" >> $GITHUB_OUTPUT
-
   test:
-    needs: detect
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        day: ${{ fromJson(needs.detect.outputs.days) }}
     steps:
-      - name: Fetch repository
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git init
-          git remote add origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-          git fetch --no-tags --prune --depth=2 origin ${{ github.sha }} || true
-          git checkout --progress --force ${{ github.sha }} || true
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install Node 18 (apt)
-        run: |
-          curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-          sudo apt-get install -y nodejs
-          node -v
-          npm -v
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
-      - name: Run tests for ${{ matrix.day }}
+      - name: Install dependencies
         run: |
-          if [ "${{ matrix.day }}" = "all" ]; then
-            for d in javascript/*/*; do
-              if [ -f "$d/test.js" ]; then
-                echo "Running tests in $d"
-                node "$d/test.js"
-              fi
-            done
+          if [ -f package-lock.json ]; then
+            npm ci
           else
-            dir="${{ matrix.day }}"
-            if [ -f "$dir/test.js" ]; then
-              echo "Running tests in $dir"
-              node "$dir/test.js"
-            else
-              echo "No test file for $dir"
-            fi
+            npm install
+          fi
+
+      - name: Run selective tests for PR
+        run: |
+          set -e
+          echo "Determining changed JS paths..."
+          git fetch origin ${{ github.event.pull_request.base.sha }} --depth=1 || true
+          CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '^javascript/' || true)
+          echo "Changed files:\n$CHANGED"
+          PATHS=$(echo "$CHANGED" | awk -F/ '{print $1"/"$2"/"$3}' | sort -u | tr '\n' ' ')
+          if [ -z "$PATHS" ]; then
+            echo "No changed test folders detected; running full test suite"
+            TARGET="javascript"
+          else
+            echo "Running tests only for: $PATHS"
+            TARGET="$PATHS"
+          fi
+
+          if node --help 2>&1 | grep -q -- '--jobs'; then
+            echo "Node supports --jobs, running with parallel jobs"
+            node --test --jobs=auto $TARGET
+          else
+            echo "Node does not support --jobs, running without jobs"
+            node --test $TARGET
           fi
