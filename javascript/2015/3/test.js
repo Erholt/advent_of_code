@@ -62,6 +62,28 @@ test.describe("Day 3", () => {
       });
     });
 
+    test.describe("#to_string()", () => {
+      test("returns position as string", () => {
+        assert.deepStrictEqual(
+          coordinates().to_string(),
+          "0,0"
+        );
+      });
+
+      test("returns correct position after multiple directions", () => {
+        let position = coordinates();
+
+        position.go_north();
+        position.go_north();
+        position.go_east();
+
+        assert.deepStrictEqual(
+          position.current_position,
+          { x: 1, y: 2 }
+        );
+      });
+    });
+
     test.describe("#go_north", () => {
       test("#go_north moves the coordinates north by one", () => {
         let position = coordinates();
