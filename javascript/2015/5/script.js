@@ -3,8 +3,12 @@ const path = require("node:path");
 
 let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").split("\n").map(line => line.trim());
 
-function solution_1(input) {
-  console.log(input);
+function solution_1(input, validated_strings = 0) {
+  input.map(line => {
+    if (apply_rules(line)) { validated_strings++; }
+  });
+
+  return validated_strings;
 };
 
 function solution_2(input) {
