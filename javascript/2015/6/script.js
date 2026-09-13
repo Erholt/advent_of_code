@@ -61,13 +61,16 @@ function grid(size = 1000) {
   };
 }
 
-function light (x, y, state = false) {
+function light (x, y, brightness = 0, state = false) {
   return {
     state,
+    brightness,
     turn_on()     { this.state = true; },
     turn_off()    { this.state = false; },
     toggle()      { this.state = !this.state; },
-    coordinates() { return { x, y }; }
+    increase_brightness() { this.brightness++; },
+    decrease_brightness() { if (this.brightness > 0) this.brightness--; },
+    coordinates() { return { x, y }; },
   };
 }
 

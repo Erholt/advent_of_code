@@ -123,5 +123,23 @@ test.describe("Day 6", () => {
       subject.toggle();
       assert.strictEqual(subject.state, false);
     });
+
+    test ("light can increase brightness", () => {
+      let subject = light(1, 2);
+      subject.increase_brightness();
+      assert.strictEqual(subject.brightness, 1);
+    });
+
+    test ("light can decrease brightness", () => {
+      let subject = light(1, 2, 1);
+      subject.decrease_brightness();
+      assert.strictEqual(subject.brightness, 0);
+    });
+
+    test ("light cannot decrease brightness below 0", () => {
+      let subject = light(1, 2);
+      subject.decrease_brightness();
+      assert.strictEqual(subject.brightness, 0);
+    });
   });
 });
