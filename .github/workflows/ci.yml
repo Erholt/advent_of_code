@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -24,12 +26,31 @@ jobs:
       - name: Check Node version
         run: node --version
 
-      - name: Run tests (parallel if supported)
+      - name: Run tests (selective for PR, full for push)
         run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "Determining changed JS paths..."
+            git fetch origin ${{ github.event.pull_request.base.sha }} --depth=1 || true
+            CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '^javascript/' || true)
+            echo "Changed files:"
+            echo "$CHANGED"
+            PATHS=$(echo "$CHANGED" | awk -F/ '{print $1"/"$2"/"$3}' | sort -u | tr '\n' ' ')
+            if [ -z "$PATHS" ]; then
+              echo "No changed test folders detected; running full test suite"
+              TARGET="javascript"
+            else
+              echo "Running tests only for: $PATHS"
+              TARGET="$PATHS"
+            fi
+          else
+            echo "Running full test suite for push event"
+            TARGET="javascript"
+          fi
+
           if node --help 2>&1 | grep -q -- '--jobs'; then
             echo "Node supports --jobs, running with parallel jobs"
-            node --test --jobs=auto javascript
+            node --test --jobs=auto $TARGET
           else
             echo "Node does not support --jobs, running without jobs"
-            node --test javascript
+            node --test $TARGET
           fi
