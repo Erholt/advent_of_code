@@ -11,8 +11,15 @@ function solution_1(input, validated_strings = 0) {
   return validated_strings;
 };
 
-function solution_2(input) {
-  return "Placeholder for Solution 2";
+function solution_2(input, validated_strings = 0) {
+  input.map(line => {
+    let pair_of_letters_twice = line.match(/([a-z]{2}).*\1/);
+    let letter_repeats        = line.match(/([a-z]).\1/);
+
+    if (pair_of_letters_twice && letter_repeats) { validated_strings++; }
+  });
+
+  return validated_strings;
 };
 
 function apply_rules(string) {
