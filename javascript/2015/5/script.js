@@ -5,7 +5,11 @@ let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").split("\n
 
 function solution_1(input, validated_strings = 0) {
   input.map(line => {
-    if (apply_rules(line)) { validated_strings++; }
+    let twice_in_a_row        = line.match(/([a-z])\1/);
+    let at_least_three_vowels = line.match(/[aeiou].*[aeiou].*[aeiou]/);
+    let no_bad_combinations   = !line.match(/ab|cd|pq|xy/);
+
+    if (twice_in_a_row && at_least_three_vowels && no_bad_combinations) { validated_strings++; }
   });
 
   return validated_strings;
@@ -22,22 +26,9 @@ function solution_2(input, validated_strings = 0) {
   return validated_strings;
 };
 
-function apply_rules(string) {
-  let twice_in_a_row        = string.match(/([a-z])\1/);
-  let at_least_three_vowels = string.match(/[aeiou].*[aeiou].*[aeiou]/);
-  let no_bad_combinations   = !string.match(/ab|cd|pq|xy/);
-
-  if (twice_in_a_row && at_least_three_vowels && no_bad_combinations) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 module.exports = {
   solution_1,
-  solution_2,
-  apply_rules
+  solution_2
 };
 
 console.log(`Day 5, Solution 1: ${solution_1(input)}`);

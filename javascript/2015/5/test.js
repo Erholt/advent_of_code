@@ -4,7 +4,7 @@ const fs     = require("node:fs");
 const path   = require("node:path");
 
 const input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
-const { solution_1, solution_2, apply_rules } = require("./script");
+const { solution_1, solution_2 } = require("./script");
 
 
 test.describe("Day 5", () => {
@@ -80,49 +80,6 @@ test.describe("Day 5", () => {
       assert.strictEqual(
         solution_2(["qjhvhtzxzqqjkmpb", "uurcxstgmygtbstg", "ieodomkazucvgmuy"]),
         1
-      );
-    });
-  });
-
-  // Apply Rules
-  test.describe("Apply Rules", () => {
-    test ("apply_rules returns true for valid string", () => {
-      assert.strictEqual(
-        apply_rules("aaa"),
-        true
-      );
-    });
-
-    test ("apply_rules returns false for invalid string (String contains bad combinations)", () => {
-      assert.strictEqual(
-        apply_rules("aaab"),
-        false
-      );
-      assert.strictEqual(
-        apply_rules("aaacd"),
-        false
-      );
-      assert.strictEqual(
-        apply_rules("aaapq"),
-        false
-      );
-      assert.strictEqual(
-        apply_rules("aaaxy"),
-        false
-      );
-    });
-
-    test ("apply_rules returns false for invalid string (No double letter)", () => {
-      assert.strictEqual(
-        apply_rules("jchzalrnumimnmhp"),
-        false
-      );
-    });
-
-    test ("apply_rules returns false for invalid string (Contains only 1 vowel)", () => {
-      assert.strictEqual(
-        apply_rules("dvszwmarrgswjxmb"),
-        false
       );
     });
   });
