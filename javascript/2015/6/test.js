@@ -44,14 +44,20 @@ test.describe("Day 6", () => {
   }); 
 
   // Solution 2
-  // test.describe("Solution 2", () => {
-  //   test ("solution_2 returns 'World Hello!'", () => {
-  //     assert.strictEqual(
-  //       solution_2("test"),
-  //       "World Hello!"
-  //     );
-  //   });
-  // });
+  test.describe("Solution 2", () => {
+    test ("solution_2 turns all lights on", () => {
+      assert.strictEqual(
+        solution_2(["turn on 0,0 through 999,999"]),
+        1_000_000
+      )});
+
+    test ("solution_2 toggles 1 line of 1_000 lights on", () => {
+      assert.strictEqual(
+        solution_2(["toggle 0,0 through 999,0"]),
+        2_000
+      );
+    });
+  });
 
   // #Grid
   test.describe("Grid", () => {
@@ -90,6 +96,17 @@ test.describe("Day 6", () => {
       lights.map(light => light.turn_on());
       assert.strictEqual(
         subject.get_total_lights_on(),
+        4
+      );
+    });
+
+    test ("grid can get total brightness", () => {
+      let subject = grid();
+      let lights  = subject.get_lights([499, 499], [500, 500]);
+
+      lights.map(light => light.increase_brightness());
+      assert.strictEqual(
+        subject.get_total_brightness(),
         4
       );
     });

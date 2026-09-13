@@ -32,7 +32,32 @@ function solution_1(input) {
 };
 
 function solution_2(input) {
-  return "Placeholder for solution 2";
+  let light_grid = grid();
+
+  input.forEach(line => {
+    let [, action, start, end] =
+      line.match(/^(turn on|turn off|toggle) (\d+,\d+) through (\d+,\d+)$/);
+
+    let [start_x, start_y] = start.split(",").map(Number);
+    let [end_x, end_y]     = end.split(",").map(Number);
+
+    let lights = light_grid.get_lights([start_x, start_y], [end_x, end_y]);
+
+    switch (action) {
+      case "turn on":
+        lights.forEach(light => light.increase_brightness());
+        break;
+      case "turn off":
+        lights.forEach(light => light.decrease_brightness());
+        break;
+      case "toggle":
+        lights.forEach(light => light.increase_brightness());
+        lights.forEach(light => light.increase_brightness());
+        break;
+    }
+  });
+
+  return light_grid.get_total_brightness();
 };
 
 function grid(size = 1000) {
@@ -57,7 +82,8 @@ function grid(size = 1000) {
       }
       return lights;
     },
-    get_total_lights_on() { return grid.filter(light => light.state).length; }
+    get_total_lights_on()  { return grid.filter(light => light.state).length; },
+    get_total_brightness() { return grid.reduce((total, light) => total + light.brightness, 0); }
   };
 }
 
