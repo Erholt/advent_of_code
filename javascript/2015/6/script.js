@@ -6,14 +6,26 @@ let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").split("\n
 function solution_1(input) {
   let light_grid = grid();
 
-  input.map(line => {
+  input.forEach(line => {
     let [, action, start, end] =
       line.match(/^(turn on|turn off|toggle) (\d+,\d+) through (\d+,\d+)$/);
 
     let [start_x, start_y] = start.split(",").map(Number);
     let [end_x, end_y]     = end.split(",").map(Number);
 
+    let lights = light_grid.get_lights([start_x, start_y], [end_x, end_y]);
 
+    switch (action) {
+      case "turn on":
+        lights.forEach(light => light.turn_on());
+        break;
+      case "turn off":
+        lights.forEach(light => light.turn_off());
+        break;
+      case "toggle":
+        lights.forEach(light => light.toggle());
+        break;
+    }
   });
 
   return light_grid.get_total_lights_on();
@@ -33,7 +45,7 @@ function grid(size = 1000) {
 
   return {
     grid,
-    get_light(x, y) { return grid.find(light => light.coordinates().x === x && light.coordinates().y === y); },
+    get_light(x, y) { return grid[x * size + y]; },
     get_lights(start, end, lights = []) {
       let [start_x, start_y] = start;
       let [end_x, end_y]     = end;

@@ -9,7 +9,7 @@ const { solution_1, solution_2, grid, light } = require("./script");
 
 test.describe("Day 6", () => {
   // Solution 1
-  test.describe.skip("Solution 1", () => {
+  test.describe("Solution 1", () => {
     test ("solution_1 turns all lights on", () => {
       assert.strictEqual(
         solution_1(["turn on 0,0 through 999,999"]),
