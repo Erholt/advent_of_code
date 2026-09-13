@@ -54,14 +54,35 @@ test.describe("Day 5", () => {
   }); 
 
   // Solution 2
-  // test.describe("Solution 2", () => {
-  //   test ("solution_2 returns 'World Hello!'", () => {
-  //     assert.strictEqual(
-  //       solution_2("test"),
-  //       "World Hello!"
-  //     );
-  //   });
-  // });
+  test.describe("Solution 2", () => {
+    test ("solution_2 returns 1 validated string", () => {
+      assert.strictEqual(
+        solution_2(["qjhvhtzxzqqjkmpb"]),
+        1
+      );
+    });
+
+    test ("solution_2 returns 1 failed string", () => {
+      assert.strictEqual(
+        solution_2(["uurcxstgmygtbstg"]),
+        0
+      );
+    });
+
+    test ("solution_2 returns 1 failed string", () => {
+      assert.strictEqual(
+        solution_2(["ieodomkazucvgmuy"]),
+        0
+      );
+    });
+
+    test ("solution_2 with all combined have correct amount", () => {
+      assert.strictEqual(
+        solution_2(["qjhvhtzxzqqjkmpb", "uurcxstgmygtbstg", "ieodomkazucvgmuy"]),
+        1
+      );
+    });
+  });
 
   // Apply Rules
   test.describe("Apply Rules", () => {
