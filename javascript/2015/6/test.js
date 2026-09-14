@@ -4,7 +4,7 @@ const fs     = require("node:fs");
 const path   = require("node:path");
 
 const input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
-const { solution_1, solution_2, grid, light } = require("./script");
+const { solution_1, solution_2, grid, light, parseInstruction, applyInstructions } = require("./script");
 
 
 test.describe("Day 6", () => {
@@ -157,6 +157,102 @@ test.describe("Day 6", () => {
       let subject = light(1, 2);
       subject.decrease_brightness();
       assert.strictEqual(subject.brightness, 0);
+    });
+  });
+
+  // #parseInstruction
+  test.describe("parseInstruction", () => {
+    test ("parses instruction correctly", () => {
+      let instruction = "turn on 0,0 through 999,999";
+      let parsed      = parseInstruction(instruction);
+
+      assert.strictEqual(parsed.action, "turn on");
+      assert.deepStrictEqual(parsed.start, [0, 0]);
+      assert.deepStrictEqual(parsed.end, [999, 999]);
+    });
+
+    test ("parses instruction with toggle correctly", () => {
+      let instruction = "toggle 0,0 through 999,999";
+      let parsed      = parseInstruction(instruction);
+
+      assert.strictEqual(parsed.action, "toggle");
+      assert.deepStrictEqual(parsed.start, [0, 0]);
+      assert.deepStrictEqual(parsed.end, [999, 999]);
+    });
+
+    test ("parses instruction with turn off correctly", () => {
+      let instruction = "turn off 0,0 through 999,999";
+      let parsed      = parseInstruction(instruction);
+
+      assert.strictEqual(parsed.action, "turn off");
+      assert.deepStrictEqual(parsed.start, [0, 0]);
+      assert.deepStrictEqual(parsed.end, [999, 999]);
+    });
+  });
+
+  // #applyInstructions
+  test.describe("applyInstructions", () => {
+    test.describe("when using .get_total_lights_on", () => {
+      test("applies instructions to grid", () => {
+        let lightGrid = grid();
+        let actionMap = { "turn on": light => light.turn_on() };
+        let input     = ["turn on 0,0 through 0,0"];
+
+        applyInstructions(input, lightGrid, actionMap, grid => grid.get_total_lights_on());
+        assert.strictEqual(lightGrid.get_total_lights_on(), 1);
+      });
+
+      test("applies instructions to grid with toggle", () => {
+        let lightGrid = grid();
+        let actionMap = { toggle: light => light.toggle() };
+        let input     = ["toggle 0,0 through 0,0"];
+
+        applyInstructions(input, lightGrid, actionMap, grid => grid.get_total_lights_on());
+        assert.strictEqual(lightGrid.get_total_lights_on(), 1);
+      });
+
+      test("applies instructions to grid with turn off", () => {
+        let lightGrid = grid();
+        let actionMap = { "turn off": light => light.turn_off() };
+        let input     = ["turn off 0,0 through 0,0"];
+
+        applyInstructions(input, lightGrid, actionMap, grid => grid.get_total_lights_on());
+        assert.strictEqual(lightGrid.get_total_lights_on(), 0);
+      });
+    });
+
+    test.describe("when using .get_total_brightness", () => {
+      test("applies instructions to grid", () => {
+        let lightGrid = grid();
+        let actionMap = { "turn on": light => light.increase_brightness() };
+        let input     = ["turn on 0,0 through 0,0"];
+
+        applyInstructions(input, lightGrid, actionMap, grid => grid.get_total_brightness());
+        assert.strictEqual(lightGrid.get_total_brightness(), 1);
+      });
+
+      test("applies instructions to grid with toggle", () => {
+        let lightGrid = grid();
+        let actionMap = {
+          toggle: light => {
+            light.increase_brightness();
+            light.increase_brightness();
+          }
+        };
+        let input = ["toggle 0,0 through 0,0"];
+
+        applyInstructions(input, lightGrid, actionMap, grid => grid.get_total_brightness());
+        assert.strictEqual(lightGrid.get_total_brightness(), 2);
+      });
+
+      test("applies instructions to grid with turn off", () => {
+        let lightGrid = grid();
+        let actionMap = { "turn off": light => light.decrease_brightness() };
+        let input     = ["turn off 0,0 through 0,0"];
+
+        applyInstructions(input, lightGrid, actionMap, grid => grid.get_total_brightness());
+        assert.strictEqual(lightGrid.get_total_brightness(), 0);
+      });
     });
   });
 });
