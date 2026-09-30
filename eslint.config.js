@@ -14,7 +14,11 @@ module.exports = [
       "max-lines-per-function": ["error", { max: 10, skipBlankLines: true }],
       "padding-line-between-statements": [
         "error",
-        { blankLine: "always", prev: "*", next: "return" }
+        {
+          blankLine: "always",
+          prev: ["const", "let", "var"],
+          next: ["if", "for", "while", "do", "switch", "try", "with", "return", "throw"]
+        }
       ]
     }
   },
