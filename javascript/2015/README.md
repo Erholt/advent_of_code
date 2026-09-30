@@ -2,43 +2,6 @@
 
 This folder contains my JavaScript solutions for the 2015 Advent of Code challenge.
 
-## Overview
-
-Each day is stored in its own folder, and the structure stays consistent across the set:
-
-```text
-javascript/2015/
-├── 1/
-│   ├── input.txt
-│   ├── script.js
-│   └── test.js
-├── 2/
-│   ├── input.txt
-│   ├── script.js
-│   └── test.js
-├── ...
-└── README.md
-```
-
-Each day includes:
-- `input.txt` with the puzzle input
-- `script.js` with the implementation
-- `test.js` with Node-based verification tests
-
-## How to run
-
-From the repository root:
-
-```bash
-node --test
-```
-
-To run linting:
-
-```bash
-npm run lint
-```
-
 ## Progress
 
 The 2015 set is in progress. Completed days are marked below:
