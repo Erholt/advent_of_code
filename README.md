@@ -4,3 +4,7 @@ to run tests run
 ```
 node --test
 ```
+to run lint run
+```
+npm run lint  
+```
