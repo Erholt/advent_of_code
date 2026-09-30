@@ -1,19 +1,16 @@
+function isSingleVariableDeclaration(statement) {
+  return statement.type === "VariableDeclaration" &&
+    statement.declarations.length === 1;
+}
+
+function isSupportedPattern(pattern) {
+  return ["Identifier", "ArrayPattern", "ObjectPattern"].includes(pattern.type);
+}
+
 function getVariableDeclarator(statement) {
-  if (
-    statement.type !== "VariableDeclaration" ||
-    statement.declarations.length !== 1
-  ) {
-    return null;
-  }
-
+  if (!isSingleVariableDeclaration(statement)) return null;
   const [declarator] = statement.declarations;
-  if (
-    !["Identifier", "ArrayPattern", "ObjectPattern"].includes(declarator.id.type) ||
-    declarator.init === null
-  ) {
-    return null;
-  }
-
+  if (!isSupportedPattern(declarator.id) || declarator.init === null) return null;
   return declarator;
 }
 
@@ -22,58 +19,56 @@ function getEqualsToken(sourceCode, declarator) {
   return token.value === "=" ? token : null;
 }
 
+function isMultilineInitializer(statement, declarator) {
+  return declarator.init.loc.end.line > statement.loc.start.line;
+}
+
+function getGroupEntry(statement, sourceCode) {
+  const declarator = getVariableDeclarator(statement);
+  if (!declarator || isMultilineInitializer(statement, declarator)) return null;
+  const equalsToken = getEqualsToken(sourceCode, declarator);
+  return equalsToken ? { statement, declarator, equalsToken } : null;
+}
+
+function getTargetColumn(group) {
+  return Math.max(...group.map(({ declarator }) => declarator.id.loc.end.column)) + 1;
+}
+
+function reportIfMisaligned(entry, targetColumn, context) {
+  if (entry.equalsToken.loc.start.column === targetColumn) return;
+  context.report({ node: entry.equalsToken, messageId: "unaligned" });
+}
+
+function checkGroup(group, context) {
+  if (group.length < 2) return [];
+  const targetColumn = getTargetColumn(group);
+  for (const entry of group) reportIfMisaligned(entry, targetColumn, context);
+  return [];
+}
+
+function continuesGroup(statement, previous) {
+  return previous !== undefined &&
+    statement.kind === previous.kind &&
+    statement.loc.start.line === previous.loc.end.line + 1;
+}
+
+function appendToGroup(group, entry, context) {
+  const previous = group[group.length - 1]?.statement;
+  if (!continuesGroup(entry.statement, previous)) group = checkGroup(group, context);
+  return [...group, entry];
+}
+
+function processStatement(statement, group, sourceCode, context) {
+  const entry = getGroupEntry(statement, sourceCode);
+  return entry ? appendToGroup(group, entry, context) : checkGroup(group, context);
+}
+
 function checkStatementList(statements, sourceCode, context) {
   let group = [];
-
-  function checkGroup() {
-    if (group.length < 2) {
-      group = [];
-      return;
-    }
-
-    const targetColumn = Math.max(
-      ...group.map(({ declarator }) => declarator.id.loc.end.column)
-    ) + 1;
-
-    for (const { equalsToken } of group) {
-      if (equalsToken.loc.start.column !== targetColumn) {
-        context.report({
-          node: equalsToken,
-          messageId: "unaligned"
-        });
-      }
-    }
-
-    group = [];
-  }
-
   for (const statement of statements) {
-    const declarator = getVariableDeclarator(statement);
-    const equalsToken = declarator && getEqualsToken(sourceCode, declarator);
-
-    if (!declarator || !equalsToken) {
-      checkGroup();
-      continue;
-    }
-
-    if (declarator.init.loc.end.line > statement.loc.start.line) {
-      checkGroup();
-      continue;
-    }
-
-    const previous = group[group.length - 1];
-    const continuesGroup = previous &&
-      statement.kind === previous.statement.kind &&
-      statement.loc.start.line === previous.statement.loc.end.line + 1;
-
-    if (!continuesGroup) {
-      checkGroup();
-    }
-
-    group.push({ statement, declarator, equalsToken });
+    group = processStatement(statement, group, sourceCode, context);
   }
-
-  checkGroup();
+  checkGroup(group, context);
 }
 
 module.exports = {
@@ -89,17 +84,10 @@ module.exports = {
   },
   create(context) {
     const sourceCode = context.sourceCode;
-
     return {
-      "Program:exit"(node) {
-        checkStatementList(node.body, sourceCode, context);
-      },
-      "BlockStatement:exit"(node) {
-        checkStatementList(node.body, sourceCode, context);
-      },
-      "SwitchCase:exit"(node) {
-        checkStatementList(node.consequent, sourceCode, context);
-      }
+      "Program:exit": node => checkStatementList(node.body, sourceCode, context),
+      "BlockStatement:exit": node => checkStatementList(node.body, sourceCode, context),
+      "SwitchCase:exit": node => checkStatementList(node.consequent, sourceCode, context)
     };
   }
 };
