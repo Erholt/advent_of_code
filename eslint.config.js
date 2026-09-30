@@ -11,7 +11,11 @@ module.exports = [
     },
     rules: {
       "max-len": ["error", { code: 120 }],
-      "max-lines-per-function": ["error", { max: 10 }]
+      "max-lines-per-function": ["error", { max: 10 }],
+      "padding-line-between-statements": [
+        "error",
+        { blankLine: "always", prev: "*", next: "return" }
+      ]
     }
   },
   {
