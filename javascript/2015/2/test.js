@@ -1,9 +1,6 @@
 const test   = require("node:test");
 const assert = require("node:assert");
-const fs     = require("node:fs");
-const path   = require("node:path");
 
-const input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").split("\n");
 const { solution_1, solution_2, gift } = require("./script");
 
 test.describe("Day 2", () => {
@@ -62,14 +59,14 @@ test.describe("Day 2", () => {
     test.describe("ribbon", () => {
       test("returns correct amount for 2x3x4", () => {
         assert.strictEqual(
-          gift("2x3x4").combined_ribbon,
+          gift("2x3x4").ribbon,
           34
         );
       });
 
       test("returns correct amount for 1x1x10", () => {
         assert.strictEqual(
-          gift("1x1x10").combined_ribbon,
+          gift("1x1x10").ribbon,
           14
         );
       });

@@ -6,42 +6,35 @@ let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
 function solution_1(input) { return count_unique_houses(input, [coordinates()]); };
 function solution_2(input) { return count_unique_houses(input, [coordinates(), coordinates()]); };
 
+function move(mover, direction) {
+  switch (direction) {
+    case "^": mover.go_north(); break;
+    case "v": mover.go_south(); break;
+    case ">": mover.go_east(); break;
+    case "<": mover.go_west(); break;
+  }
+}
+
 function count_unique_houses(input, movers) {
   let visited = [movers[0].to_string()];
 
-  for (let i = 0; i < input.length; i++) {
-    let mover = movers[i % movers.length];
-
-    switch (input[i]) {
-      case "^": mover.go_north(); break;
-      case "v": mover.go_south(); break;
-      case ">": mover.go_east(); break;
-      case "<": mover.go_west(); break;
-    }
-
+  for (let index = 0; index < input.length; index++) {
+    let mover = movers[index % movers.length];
+    move(mover, input[index]);
     visited.push(mover.to_string());
   }
 
-  return [...new Set(visited)].length;
+  return new Set(visited).size;
 }
 
 function coordinates() {
   let current_position = { x: 0, y: 0 };
 
-  function to_string() { return `${current_position.x},${current_position.y}` };
-
-  function go_north() { current_position.y += 1 };
-  function go_south() { current_position.y -= 1 };
-  function go_east()  { current_position.x += 1 };
-  function go_west()  { current_position.x -= 1 };
-
-  return {
-    current_position,
-    to_string,
-    go_north,
-    go_south,
-    go_east,
-    go_west
+  return { current_position, to_string: () => `${current_position.x},${current_position.y}`,
+    go_north: () => { current_position.y += 1; },
+    go_south: () => { current_position.y -= 1; },
+    go_east: () => { current_position.x += 1; },
+    go_west: () => { current_position.x -= 1; }
   };
 };
 

@@ -26,6 +26,9 @@ jobs:
       - name: Check Node version
         run: node --version
 
+      - name: Run ESLint
+        run: npm run lint
+
       - name: Run tests (selective for PR, full for push)
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then

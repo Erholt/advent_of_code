@@ -3,29 +3,16 @@ const path = require("node:path");
 
 let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
 
-function solution_1(input) {
-  let floor = 0;
-  for (let i = 0; i < input.length; i++) {
-    if (input[i] === "(") {
-      floor++;
-    } else if (input[i] === ")") {
-      floor--;
-    }
-  }
+function solution_1(input, floor = 0) {
+  for (let i = 0; i < input.length; i++) { (input[i] === "(") ? floor++ : floor-- }
+
   return floor;
 }
 
-function solution_2(input) {
-  let floor = 0;
+function solution_2(input, floor = 0) {
   for (let i = 0; i < input.length; i++) {
-    if (input[i] === "(") {
-      floor++;
-    } else if (input[i] === ")") {
-      floor--;
-    }
-    if (floor === -1) {
-      return i + 1;
-    }
+    (input[i] === "(") ? floor++ : floor--
+    if (floor === -1) return i + 1;
   }
 }
 
