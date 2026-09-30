@@ -8,6 +8,9 @@ module.exports = [
     files: ["**/*.js"],
     languageOptions: {
       globals: globals.node
+    },
+    rules: {
+      "max-len": ["error", { code: 120 }]
     }
   },
   {
