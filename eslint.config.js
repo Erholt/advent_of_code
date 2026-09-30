@@ -10,6 +10,10 @@ module.exports = [
       globals: globals.node
     },
     rules: {
+      "no-unused-vars": ["error", {
+        varsIgnorePattern: "^input$",
+        argsIgnorePattern: "^input$"
+      }],
       "max-len": ["error", { code: 120 }],
       "max-lines-per-function": ["error", { max: 10, skipBlankLines: true }],
       "padding-line-between-statements": [
