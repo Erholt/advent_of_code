@@ -6,6 +6,7 @@ let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
 function solution_1(input) {
   let floor = 0;
   for (let i = 0; i < input.length; i++) { (input[i] === "(") ? floor++ : floor-- }
+
   return floor;
 }
 
