@@ -30,11 +30,12 @@ function count_unique_houses(input, movers) {
 function coordinates() {
   let current_position = { x: 0, y: 0 };
 
-  return { current_position, to_string: () => `${current_position.x},${current_position.y}`,
-    go_north: () => { current_position.y += 1; },
-    go_south: () => { current_position.y -= 1; },
-    go_east: () => { current_position.x += 1; },
-    go_west: () => { current_position.x -= 1; }
+  return { current_position,
+    to_string: () => `${current_position.x},${current_position.y}`,
+    go_north:  () => { current_position.y += 1; },
+    go_south:  () => { current_position.y -= 1; },
+    go_east:   () => { current_position.x += 1; },
+    go_west:   () => { current_position.x -= 1; }
   };
 };
 

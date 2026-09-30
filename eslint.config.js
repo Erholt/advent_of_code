@@ -1,23 +1,37 @@
 const js = require("@eslint/js");
 const globals = require("globals");
+const stylistic = require("@stylistic/eslint-plugin");
 const alignVariableAssignments = require("./eslint-rules/align-variable-assignments");
 
 module.exports = [
   js.configs.recommended,
   {
-    files: ["**/*.js"],
+    files:   ["**/*.js"],
+    plugins: {
+      "@stylistic": stylistic
+    },
     languageOptions: {
       globals: globals.node
     },
     rules: {
-      "max-len": ["error", { code: 120 }],
+      "no-unused-vars": ["error", {
+        varsIgnorePattern: "^input$",
+        argsIgnorePattern: "^input$"
+      }],
+      "max-len":                ["error", { code: 120 }],
       "max-lines-per-function": ["error", { max: 10, skipBlankLines: true }],
+      "@stylistic/indent":      [
+        "error",
+        2,
+        { ignoredNodes: ["ObjectExpression"], MemberExpression: "off" }
+      ],
+      "@stylistic/key-spacing":          ["error", { align: "value" }],
       "padding-line-between-statements": [
         "error",
         {
           blankLine: "always",
-          prev: ["const", "let", "var"],
-          next: ["if", "for", "while", "do", "switch", "try", "with", "return", "throw"]
+          prev:      ["const", "let", "var"],
+          next:      ["if", "for", "while", "do", "switch", "try", "with", "return", "throw"]
         }
       ]
     }
@@ -29,7 +43,7 @@ module.exports = [
     }
   },
   {
-    files: ["javascript/**/*.js"],
+    files:   ["javascript/**/*.js"],
     plugins: {
       local: {
         rules: {

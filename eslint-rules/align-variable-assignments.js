@@ -52,7 +52,7 @@ module.exports = {
     docs: {
       description: "align equals signs in consecutive variable declarations"
     },
-    schema: [],
+    schema:   [],
     messages: {
       unaligned: "Align '=' with the other variable declarations in this group."
     }
@@ -61,9 +61,9 @@ module.exports = {
     const sourceCode = context.sourceCode;
 
     return {
-      "Program:exit": node => checkStatementList(node.body, sourceCode, context),
+      "Program:exit":        node => checkStatementList(node.body, sourceCode, context),
       "BlockStatement:exit": node => checkStatementList(node.body, sourceCode, context),
-      "SwitchCase:exit": node => checkStatementList(node.consequent, sourceCode, context)
+      "SwitchCase:exit":     node => checkStatementList(node.consequent, sourceCode, context)
     };
   }
 };
