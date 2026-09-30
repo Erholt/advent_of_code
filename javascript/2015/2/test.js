@@ -59,14 +59,14 @@ test.describe("Day 2", () => {
     test.describe("ribbon", () => {
       test("returns correct amount for 2x3x4", () => {
         assert.strictEqual(
-          gift("2x3x4").combined_ribbon,
+          gift("2x3x4").ribbon,
           34
         );
       });
 
       test("returns correct amount for 1x1x10", () => {
         assert.strictEqual(
-          gift("1x1x10").combined_ribbon,
+          gift("1x1x10").ribbon,
           14
         );
       });

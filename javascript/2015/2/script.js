@@ -9,7 +9,7 @@ function solution_1 (input) {
 }
 
 function solution_2 (input) {
-  return input.map(line => { return gift(line).combined_ribbon })
+  return input.map(line => { return gift(line).ribbon })
               .reduce((sum, value) => sum + value, 0);
 }
 
