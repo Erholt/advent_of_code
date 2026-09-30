@@ -10,7 +10,8 @@ module.exports = [
       globals: globals.node
     },
     rules: {
-      "max-len": ["error", { code: 120 }]
+      "max-len": ["error", { code: 120 }],
+      "max-lines-per-function": ["error", { max: 10 }]
     }
   },
   {
