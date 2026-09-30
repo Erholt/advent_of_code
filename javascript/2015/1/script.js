@@ -4,7 +4,9 @@ const path = require("node:path");
 let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
 
 function solution_1(input, floor = 0) {
-  for (let i = 0; i < input.length; i++) { (input[i] === "(") ? floor++ : floor-- }
+  for (let i = 0; i < input.length; i++) {
+    (input[i] === "(") ? floor++ : floor--
+  }
 
   return floor;
 }
@@ -14,6 +16,8 @@ function solution_2(input, floor = 0) {
     (input[i] === "(") ? floor++ : floor--
     if (floor === -1) return i + 1;
   }
+
+  return floor
 }
 
 module.exports = {
