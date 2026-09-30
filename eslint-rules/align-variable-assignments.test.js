@@ -4,7 +4,7 @@ let rule           = require("./align-variable-assignments");
 let ruleTester = new RuleTester({
   languageOptions: {
     ecmaVersion: "latest",
-    sourceType: "script"
+    sourceType:  "script"
   }
 });
 
@@ -26,7 +26,7 @@ ruleTester.run("align-variable-assignments", rule, {
   ],
   invalid: [
     {
-      code: "const short = 1;\nconst longer = 2;",
+      code:   "const short = 1;\nconst longer = 2;",
       errors: [{ messageId: "unaligned" }]
     },
     {
