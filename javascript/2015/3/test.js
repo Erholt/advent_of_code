@@ -45,7 +45,7 @@ test.describe("Day 3", () => {
     });
   });
 
- // Coordinates Object
+  // Coordinates Object
   test.describe("Coordinates", () => {
     test.describe("#current_position", () => {
       test("returns correct position", () => {
