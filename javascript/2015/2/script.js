@@ -13,24 +13,25 @@ function solution_2 (input) {
               .reduce((sum, value) => sum + value, 0);
 }
 
+function calculateWrappingPaper([length, width, height]) {
+  let surfaceArea = 2 * (length * width + width * height + height * length);
+  let slack       = Math.min(length * width, width * height, height * length);
+
+  return surfaceArea + slack;
+}
+
+function calculateRibbon([length, width, height]) {
+  let [shortest, nextShortest] = [length, width, height].sort((a, b) => a - b);
+
+  return 2 * (shortest + nextShortest) + length * width * height;
+}
+
 function gift(dimensions) {
-  let [l, w, h]          = dimensions.split("x").map(Number);
-  let dimensions_numbers = [l, w, h];
-
-  // Wrapping paper
-  let surface_area   = (2 * l * w) + (2 * w * h) + (2 * h * l);
-  let slack          = Math.min(l * w, w * h, h * l);
-  let wrapping_paper = surface_area + slack;
-
-  // Ribbon
-  let sorted_dimensions = dimensions_numbers.slice().sort((a, b) => a - b);
-  let ribbon            = 2 * (sorted_dimensions[0] + sorted_dimensions[1]);
-  let bow_tie           = l * w * h;
-  let combined_ribbon   = ribbon + bow_tie;
+  let sides = dimensions.split("x").map(Number);
 
   return {
-    wrapping_paper,
-    combined_ribbon
+    wrapping_paper: calculateWrappingPaper(sides),
+    ribbon:         calculateRibbon(sides)
   };
 }
 

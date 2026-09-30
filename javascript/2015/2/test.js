@@ -1,9 +1,6 @@
 const test   = require("node:test");
 const assert = require("node:assert");
-const fs     = require("node:fs");
-const path   = require("node:path");
 
-const input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").split("\n");
 const { solution_1, solution_2, gift } = require("./script");
 
 test.describe("Day 2", () => {
