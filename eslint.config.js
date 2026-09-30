@@ -20,7 +20,11 @@ module.exports = [
       }],
       "max-len": ["error", { code: 120 }],
       "max-lines-per-function": ["error", { max: 10, skipBlankLines: true }],
-      "@stylistic/indent": ["error", 2, { ignoredNodes: ["ObjectExpression"] }],
+      "@stylistic/indent": [
+        "error",
+        2,
+        { ignoredNodes: ["ObjectExpression"], MemberExpression: "off" }
+      ],
       "@stylistic/key-spacing": ["error", { align: "value" }],
       "padding-line-between-statements": [
         "error",
