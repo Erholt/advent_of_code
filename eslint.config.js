@@ -15,6 +15,12 @@ module.exports = [
     }
   },
   {
+    files: ["**/test.js", "**/*.test.js"],
+    rules: {
+      "max-lines-per-function": "off"
+    }
+  },
+  {
     files: ["javascript/**/*.js"],
     plugins: {
       local: {
