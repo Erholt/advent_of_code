@@ -53,10 +53,10 @@ function grid(size = 1000, existing_lights = []) {
   let lights = create_lights(size, existing_lights);
 
   return {
-    grid: lights,
-    get_light: (x, y) => lights[x * size + y],
-    get_lights: (start, end, selected = []) => get_lights(lights, size, start, end, selected),
-    get_total_lights_on: () => lights.filter(light => light.state).length,
+    grid:                 lights,
+    get_light:            (x, y) => lights[x * size + y],
+    get_lights:           (start, end, selected = []) => get_lights(lights, size, start, end, selected),
+    get_total_lights_on:  () => lights.filter(light => light.state).length,
     get_total_brightness: () => lights.reduce((total, light) => total + light.brightness, 0)
   };
 }
