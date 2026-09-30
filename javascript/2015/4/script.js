@@ -1,5 +1,5 @@
-const fs   = require("node:fs");
-const path = require("node:path");
+const fs     = require("node:fs");
+const path   = require("node:path");
 const crypto = require("node:crypto");
 
 let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
@@ -9,8 +9,10 @@ function solution_2(input) { return findNumber(input, 6); };
 
 function findNumber(input, zerosCount, count = 1) {
   let target = "0".repeat(zerosCount);
+
   while (true) {
     let hash = crypto.createHash("md5").update(input + count).digest("hex");
+
     if (hash.startsWith(target)) return count;
     count++;
   }

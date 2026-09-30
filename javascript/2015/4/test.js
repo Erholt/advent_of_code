@@ -1,10 +1,7 @@
 const test   = require("node:test");
 const assert = require("node:assert");
-const fs     = require("node:fs");
-const path   = require("node:path");
 
-const input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
-const { solution_1, solution_2 } = require("./script");
+const { solution_1 } = require("./script");
 
 
 test.describe.skip("Day 4 - skipped: slow MD5 brute force", () => {
