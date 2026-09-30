@@ -4,11 +4,15 @@ const path = require("node:path");
 let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").split("\n").map(line => line.trim());
 
 function solution_1(input) {
-  return "Hello World!";
+  if (input) {
+    return "Hello World!";
+  }
 };
 
 function solution_2(input) {
-  return "World Hello!";
+  if (input) {
+    return "World Hello!";
+  }
 };
 
 module.exports = {
