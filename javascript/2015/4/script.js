@@ -4,10 +4,10 @@ const crypto = require("node:crypto");
 
 let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
 
-function solution_1(input) { return findNumber(input, 5); };
-function solution_2(input) { return findNumber(input, 6); };
+function solution_1(input) { return find_number(input, 5); };
+function solution_2(input) { return find_number(input, 6); };
 
-function findNumber(input, zerosCount, count = 1) {
+function find_number(input, zerosCount, count = 1) {
   let target = "0".repeat(zerosCount);
 
   while (true) {

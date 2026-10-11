@@ -13,26 +13,26 @@ function solution_2 (input) {
               .reduce((sum, value) => sum + value, 0);
 }
 
-function calculateWrappingPaper([length, width, height]) {
+function gift(dimensions) {
+  let sides = dimensions.split("x").map(Number);
+
+  return {
+    wrapping_paper: calculate_wrapping_paper(sides),
+    ribbon:         calculate_ribbon(sides)
+  };
+}
+
+function calculate_wrapping_paper([length, width, height]) {
   let surfaceArea = 2 * (length * width + width * height + height * length);
   let slack       = Math.min(length * width, width * height, height * length);
 
   return surfaceArea + slack;
 }
 
-function calculateRibbon([length, width, height]) {
+function calculate_ribbon([length, width, height]) {
   let [shortest, nextShortest] = [length, width, height].sort((a, b) => a - b);
 
   return 2 * (shortest + nextShortest) + length * width * height;
-}
-
-function gift(dimensions) {
-  let sides = dimensions.split("x").map(Number);
-
-  return {
-    wrapping_paper: calculateWrappingPaper(sides),
-    ribbon:         calculateRibbon(sides)
-  };
 }
 
 module.exports = {

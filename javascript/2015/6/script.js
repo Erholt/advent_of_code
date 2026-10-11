@@ -26,7 +26,19 @@ function solution_2(input, lightGrid = grid()) {
   return applyInstructions(input, lightGrid, brightness_actions, grid => grid.get_total_brightness());
 }
 
-function create_lights(size, lights) {
+function grid(size = 1000) {
+  let lights = create_lights(size);
+
+  return {
+    grid:                 lights,
+    get_light:            (x, y) => lights[x * size + y],
+    get_lights:           (start, end, selected = []) => get_lights(lights, size, start, end, selected),
+    get_total_lights_on:  () => lights.filter(light => light.state).length,
+    get_total_brightness: () => lights.reduce((total, light) => total + light.brightness, 0)
+  };
+}
+
+function create_lights(size, lights = []) {
   for (let i = 0; i < size; i++) {
     for (let j = 0; j < size; j++) {
       lights.push(light(i, j));
@@ -34,6 +46,19 @@ function create_lights(size, lights) {
   }
 
   return lights;
+}
+
+function light(x, y, brightness = 0, state = false) {
+  let result = { state, brightness };
+
+  result.turn_on             = () => { result.state = true; };
+  result.turn_off            = () => { result.state = false; };
+  result.toggle              = () => { result.state = !result.state; };
+  result.increase_brightness = () => { result.brightness++; };
+  result.decrease_brightness = () => { if (result.brightness > 0) result.brightness--; };
+  result.coordinates         = () => ({ x, y });
+
+  return result;
 }
 
 function get_lights(lights, size, start, end, selected) {
@@ -49,40 +74,6 @@ function get_lights(lights, size, start, end, selected) {
   return selected;
 }
 
-function grid(size = 1000, existing_lights = []) {
-  let lights = create_lights(size, existing_lights);
-
-  return {
-    grid:                 lights,
-    get_light:            (x, y) => lights[x * size + y],
-    get_lights:           (start, end, selected = []) => get_lights(lights, size, start, end, selected),
-    get_total_lights_on:  () => lights.filter(light => light.state).length,
-    get_total_brightness: () => lights.reduce((total, light) => total + light.brightness, 0)
-  };
-}
-
-function light(x, y, brightness = 0, state = false) {
-  let result = { state, brightness };
-
-  result.turn_on             = () => { result.state = true; };
-  result.turn_off            = () => { result.state = false; };
-  result.toggle              = () => { result.state = !result.state; };
-  result.increase_brightness = () => { result.brightness++; };
-  result.decrease_brightness = () => { if (result.brightness > 0) result.brightness--; };
-  result.coordinates = () => ({ x, y });
-
-  return result;
-}
-
-function parseInstruction(line) {
-  let [, action, start, end] =
-    line.match(/^(turn on|turn off|toggle) (\d+,\d+) through (\d+,\d+)$/);
-  let [startX, startY] = start.split(",").map(Number);
-  let [endX, endY]     = end.split(",").map(Number);
-
-  return { action, start: [startX, startY], end: [endX, endY] };
-}
-
 function applyInstructions(input, grid, actionMap, totalFn) {
   input.forEach(line => {
     let { action, start, end } = parseInstruction(line);
@@ -92,6 +83,15 @@ function applyInstructions(input, grid, actionMap, totalFn) {
   });
 
   return totalFn(grid);
+}
+
+function parseInstruction(line) {
+  let [, action, start, end] =
+    line.match(/^(turn on|turn off|toggle) (\d+,\d+) through (\d+,\d+)$/);
+  let [startX, startY] = start.split(",").map(Number);
+  let [endX, endY]     = end.split(",").map(Number);
+
+  return { action, start: [startX, startY], end: [endX, endY] };
 }
 
 module.exports = {

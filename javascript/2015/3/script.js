@@ -6,15 +6,6 @@ let input = fs.readFileSync(path.join(__dirname, "input.txt"), "utf8").trim();
 function solution_1(input) { return count_unique_houses(input, [coordinates()]); };
 function solution_2(input) { return count_unique_houses(input, [coordinates(), coordinates()]); };
 
-function move(mover, direction) {
-  switch (direction) {
-    case "^": mover.go_north(); break;
-    case "v": mover.go_south(); break;
-    case ">": mover.go_east(); break;
-    case "<": mover.go_west(); break;
-  }
-}
-
 function count_unique_houses(input, movers) {
   let visited = [movers[0].to_string()];
 
@@ -38,6 +29,15 @@ function coordinates() {
     go_west:   () => { current_position.x -= 1; }
   };
 };
+
+function move(mover, direction) {
+  switch (direction) {
+    case "^": mover.go_north(); break;
+    case "v": mover.go_south(); break;
+    case ">": mover.go_east(); break;
+    case "<": mover.go_west(); break;
+  }
+}
 
 module.exports = {
   solution_1,
