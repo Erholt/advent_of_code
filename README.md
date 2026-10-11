@@ -32,19 +32,23 @@ Each folder typically contains:
 
 ## Getting started
 
-Install dependencies:
+##### Install dependencies:
 
 ```bash
 npm install
 ```
+or
+```bash
+npm i
+```
 
-Run the full test suite:
+##### Run the full test suite:
 
 ```bash
 node --test
 ```
 
-Run linting:
+##### Run linting:
 
 ```bash
 npm run lint
